@@ -19,9 +19,9 @@ class EchoClient:
         from PIL import Image
         from io import BytesIO
         # 发送截图命令
-        cmd = '截图'.encode('utf-8')
+        #cmd = '截图'.encode('utf-8')
         # s.sendall(len(cmd).to_bytes(4, 'big'))
-        self.send(cmd)
+        #self.send(cmd)
 
         # 接收图片大小
         size_bytes = self.client_socket.recv(4)
@@ -57,6 +57,7 @@ class EchoClient:
         if event.event_type == 'down' and event.name == '截图':
             print('Alt+A 组合键被按下了。')
             self.client_socket.sendall('截图')
+            self.截图啊()
         elif event.name == 'esc':
             self.close()
     def receive(self):
