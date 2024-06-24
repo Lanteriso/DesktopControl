@@ -15,7 +15,7 @@ def receive_commands(client_socket):
         command = client_socket.recv(1024).decode('utf-8')
         if command == 'quit':
             break
-        # 根据接收到的命令执行相应操作，例如移动鼠标、点击等
+        # 根据接收到的命令执行相应操作，例如移动鼠标、点击等.
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect(('192.168.0.105', 5000))
