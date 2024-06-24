@@ -1,4 +1,20 @@
+
 import socket
+import sys
+from PIL import ImageGrab  # 需要安装Pillow库
+from io import BytesIO
+
+def send_screenshot(conn):
+    # 截取屏幕
+    screenshot = ImageGrab.grab()
+    # 将图片转换为字节流
+    buffer = BytesIO()
+    screenshot.save(buffer, format='PNG')
+    img_str = buffer.getvalue()
+
+    # 发送图片数据
+    conn.sendall(len(img_str).to_bytes(4, 'big'))  # 发送图片大小
+    conn.sendall(img_str)
 
 def start_server(host='192.168.0.105', port=12345):
     # 创建 socket 对象
@@ -21,7 +37,8 @@ def start_server(host='192.168.0.105', port=12345):
                         break
                     print(f"Received: {data.decode()}")
                     # 发送数据
-                    conn.sendall(data)
+                    #conn.sendall(data)
+                    send_screenshot(conn)
 
 if __name__ == "__main__":
     start_server()
