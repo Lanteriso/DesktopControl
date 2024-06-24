@@ -40,10 +40,11 @@ class EchoServer:
                     data = client_socket.recv(1024)
                     if not data:
                         break
-                    print(f"接收到来自 {addr} 的连接{data.decode()}")
+                    print(f"{addr}:{data.decode()}")
         except KeyboardInterrupt:
             print("服务器关闭。")
         finally:
+            print("服务器关闭2。")
             self.server_socket.close()
     def __del__(self):
         print("服务器对象销毁。")
