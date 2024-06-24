@@ -3,6 +3,7 @@ import socket
 import sys
 from PIL import ImageGrab  # 需要安装Pillow库
 from io import BytesIO
+import pydirectinput
 
 def send_screenshot(conn):
     # 截取屏幕
@@ -29,16 +30,16 @@ def start_server(host='192.168.0.105', port=12345):
             # 接受连接
             conn, addr = s.accept()
             with conn:
-                print(f"Connected by {addr}")
                 while True:
                     # 接收数据
                     data = conn.recv(1024)
                     if not data:
                         break
-                    print(f"Received: {data.decode()}")
+                    print(f"{addr}:{data.decode()}")
+                    pydirectinput.press(data.decode())
                     # 发送数据
                     #conn.sendall(data)
-                    send_screenshot(conn)
+                    #send_screenshot(conn)
 
 if __name__ == "__main__":
     start_server()
