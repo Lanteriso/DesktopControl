@@ -16,7 +16,7 @@ class EchoServer:
             while True:
                 client_socket, addr = self.server_socket.accept()
                 print(f"接收到来自 {addr} 的连接")
-                client_socket.sendall(b'欢迎连接服务器！')
+                client_socket.sendall('欢迎连接服务器！')
                 while True:
                     data = client_socket.recv(1024)
                     if not data:
