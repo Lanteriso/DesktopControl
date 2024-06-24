@@ -16,7 +16,7 @@ class EchoServer:
             while True:
                 client_socket, addr = self.server_socket.accept()
                 print(f"接收到来自 {addr} 的连接")
-                client_socket.sendall('欢迎连接服务器！')
+                client_socket.sendall('Hello')
                 while True:
                     data = client_socket.recv(1024)
                     if not data:
@@ -53,8 +53,8 @@ if __name__ == '__main__':
 
     # 启动服务器
     server = EchoServer()
-    server_thread = threading.Thread(target=server.startA)
-    server_thread.startA()
+    #server_thread = threading.Thread(target=server.startA)
+    server.startA()
 
     # 等待服务器启动
     #input("按 Enter 启动客户端...")
