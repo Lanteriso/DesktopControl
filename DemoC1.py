@@ -25,7 +25,7 @@ class EchoClient:
 if __name__ == '__main__':
     import threading
 
-    input("按 Enter 启动客户端...")
+    #input("按 Enter 启动客户端...")
 
     # 客户端连接和通信
     client = EchoClient()

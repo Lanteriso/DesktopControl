@@ -40,4 +40,4 @@ if __name__ == '__main__':
     server_thread.start()
 
     # 等待服务器启动
-    input("按 Enter 启动客户端...")
+    #input("按 Enter 启动客户端...")
