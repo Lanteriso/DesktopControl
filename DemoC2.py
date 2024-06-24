@@ -55,7 +55,7 @@ class EchoServer:
                     if not data:
                         break
                     print(f"{addr}:{data.decode()}")
-                    if data.decode() == '截图':
+                    if data.decode() == 'a':
                         send_screenshot(client_socket)
                     else:
                         pydirectinput.press(data.decode())

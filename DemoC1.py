@@ -54,9 +54,9 @@ class EchoClient:
     def on_key_event(self,event):
         print(event.name)
         self.send(event.name)
-        if event.event_type == 'down' and event.name == 'a':
+        if event.event_type == 'down' and event.name == '截图':
             print('Alt+A 组合键被按下了。')
-            self.截图啊()
+            self.client_socket.sendall('截图')
         elif event.name == 'esc':
             self.close()
     def receive(self):
