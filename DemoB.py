@@ -1,32 +1,27 @@
 import socket
-import threading
-import cv2
-from PIL import ImageGrab
 
-def capture_and_send_screen(client_socket):
-    while True:
-        # 捕获屏幕图像，指定分辨率
-        screen = ImageGrab.grab(bbox=(0, 0, 1920, 1080))
-        _, buffer = cv2.imencode('.jpg', screen, [int(cv2.IMWRITE_JPEG_QUALITY), 80])
-        client_socket.send(buffer.tobytes())
+def start_server(host='192.168.0.105', port=12345):
+    # 创建 socket 对象
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        # 绑定地址和端口
+        s.bind((host, port))
+        # 开始监听
+        s.listen()
+        print(f"Server started, listening on {host}:{port}")
 
-def main():
-    # 创建socket对象并绑定到端口
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(('192.168.0.105', 5000))
-    server_socket.listen(1)
-    print("等待客户端连接...")
-
-    # 接受客户端的连接
-    client_socket, addr = server_socket.accept()
-    print(f"已连接: {addr}")
-
-    # 创建线程来捕获并发送屏幕图像
-    thread = threading.Thread(target=capture_and_send_screen, args=(client_socket,))
-    thread.start()
-
-    # 等待线程结束
-    thread.join()
+        while True:
+            # 接受连接
+            conn, addr = s.accept()
+            with conn:
+                print(f"Connected by {addr}")
+                while True:
+                    # 接收数据
+                    data = conn.recv(1024)
+                    if not data:
+                        break
+                    print(f"Received: {data.decode()}")
+                    # 发送数据
+                    conn.sendall(data)
 
 if __name__ == "__main__":
-    main()
+    start_server()
