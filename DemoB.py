@@ -11,7 +11,7 @@ def receive_screen(client_socket):
         cv2.imshow('Remote Desktop', frame)
 
 def send_commands(client_socket):
-    # 这里可以根据用户的操作发送控制命令到客户端
+    # 这里可以根据用户的操作发送控制命令到客户端.
     pass
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
