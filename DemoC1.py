@@ -1,7 +1,7 @@
 import socket
 
 class EchoClient:
-    def __init__(self, host='192.168.0.105', port=12345):
+    def __init__(self, host='127.0.0.1', port=12345):
         self.host = host
         self.port = port
         self.client_socket = None
@@ -21,3 +21,16 @@ class EchoClient:
 
     def __del__(self):
         print("客户端对象销毁。")
+
+if __name__ == '__main__':
+    import threading
+
+    input("按 Enter 启动客户端...")
+
+    # 客户端连接和通信
+    client = EchoClient()
+    client.connect()
+    client.send("你好，服务器！")
+    print("收到服务器的回声：", client.receive())
+    client.close()
+

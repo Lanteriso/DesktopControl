@@ -1,7 +1,7 @@
 import socket
 
 class EchoServer:
-    def __init__(self, host='192.168.0.105', port=12345):
+    def __init__(self, host='127.0.0.1', port=12345):
         self.host = host
         self.port = port
         self.server_socket = None
@@ -30,3 +30,14 @@ class EchoServer:
 
     def __del__(self):
         print("服务器对象销毁。")
+
+if __name__ == '__main__':
+    import threading
+
+    # 启动服务器
+    server = EchoServer()
+    server_thread = threading.Thread(target=server.start)
+    server_thread.start()
+
+    # 等待服务器启动
+    input("按 Enter 启动客户端...")
