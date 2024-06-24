@@ -2,33 +2,28 @@ import socket
 import cv2
 import numpy as np
 
-# 设置服务端的IP地址和端口号
-server_ip = '192.168.0.105'  # 请替换为服务端的局域网IP
-server_port = 5000
+def receive_and_display_image(server_ip):
+    # 创建socket对象并连接到服务端
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client_socket.connect((server_ip, 5000))
 
-# 创建socket对象并连接到服务端
-client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client_socket.connect((server_ip, server_port))
-
-# 定义显示屏幕图像的函数
-def display_screen():
     while True:
-        # 接收屏幕图像的字节流
-        data = client_socket.recv(1024)
-        # 如果没有数据，说明连接已断开
-        if not data:
-            break
-        # 将字节流解码为图像
-        frame = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
-        # 显示图像
-        cv2.imshow('Remote Desktop', frame)
-        # 按'q'退出
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+        # 接收图像数据
+        data, _ = cv2.imdecode(np.frombuffer(client_socket.recv(4096), np.uint8), cv2.IMREAD_COLOR)
+        if data is not None:
+            # 显示图像
+            cv2.imshow('B电脑屏幕', data)
+            # 按'q'退出
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+        else:
+            # 如果接收到的数据无法解码，可能是数据不完整或损坏
+            print("接收到的数据无法解码，可能是数据不完整或损坏。")
 
-# 开始显示屏幕图像的循环
-display_screen()
+    # 清理
+    client_socket.close()
+    cv2.destroyAllWindows()
 
-# 关闭连接
-client_socket.close()
-cv2.destroyAllWindows()
+if __name__ == "__main__":
+    server_ip = '192.168.0.105'  # 替换为B电脑的实际IP地址
+    receive_and_display_image(server_ip)

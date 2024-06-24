@@ -1,39 +1,41 @@
 import socket
+import threading
 import cv2
-from PIL import ImageGrab
 import numpy as np
+from PIL import ImageGrab
 
-# 设置服务端的IP地址和端口号
-server_ip = '192.168.0.105'  # 请替换为服务端的局域网IP
-server_port = 5000
-
-# 创建socket对象并绑定IP地址和端口号
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_socket.bind((server_ip, server_port))
-
-# 开始监听连接
-server_socket.listen(1)
-print("等待客户端连接1...")
-
-# 接受客户端连接
-client_socket, addr = server_socket.accept()
-print(f"已连接: {addr}")
-
-# 定义接收屏幕图像的函数
-def receive_screen():
+def capture_and_send_screen(client_socket):
     while True:
         # 捕获屏幕图像
         screen = ImageGrab.grab()
-        # 将图像转换为numpy数组
+        # 将PIL图像转换为numpy数组
         screen_np = np.array(screen)
-        # 将图像编码为字节流
-        _, buffer = cv2.imencode('.jpg', cv2.cvtColor(screen_np, cv2.COLOR_BGR2RGB), [int(cv2.IMWRITE_JPEG_QUALITY), 50])
-        # 发送字节流
+        # 将图像转换为BGR格式
+        screen_bgr = cv2.cvtColor(screen_np, cv2.COLOR_RGB2BGR)
+        # 编码图像为JPEG格式
+        _, buffer = cv2.imencode('.jpg', screen_bgr)
+        # 将编码后的图像数据发送给客户端
         client_socket.send(buffer.tobytes())
 
-# 开始接收屏幕图像的循环
-receive_screen()
+def main():
+    # 创建socket对象并绑定到端口
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind(('192.168.0.105', 5000))
+    server_socket.listen(1)
+    print("等待客户端连接...")
 
-# 关闭连接
-client_socket.close()
-server_socket.close()
+    # 接受客户端的连接
+    client_socket, addr = server_socket.accept()
+    print(f"已连接: {addr}")
+
+    # 创建线程来捕获并发送屏幕图像
+    thread = threading.Thread(target=capture_and_send_screen, args=(client_socket,))
+    thread.start()
+
+    # 这里可以添加更多的控制逻辑，比如接收移动鼠标或键盘输入的指令
+
+    # 等待线程结束
+    thread.join()
+
+if __name__ == "__main__":
+    main()
