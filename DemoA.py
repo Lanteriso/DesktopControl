@@ -1,32 +1,34 @@
 import socket
-import threading
 import cv2
-from PIL import ImageGrab
+import numpy as np
 
-def capture_screen_and_send(client_socket):
-    while True:
-        screen = ImageGrab.grab()
-        img_np = np.array(screen)
-        _, buffer = cv2.imencode('.jpg', cv2.cvtColor(img_np, cv2.COLOR_BGR2RGB), [int(cv2.IMWRITE_JPEG_QUALITY), 50])
-        client_socket.send(buffer.tobytes())
+# 设置服务端的IP地址和端口号
+server_ip = '192.168.0.105'  # 请替换为服务端的局域网IP
+server_port = 5000
 
-def receive_commands(client_socket):
-    while True:
-        command = client_socket.recv(1024).decode('utf-8')
-        if command == 'quit':
-            break
-        # 根据接收到的命令执行相应操作，例如移动鼠标、点击等.
-
+# 创建socket对象并连接到服务端
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client_socket.connect(('192.168.0.105', 5000))
+client_socket.connect((server_ip, server_port))
 
-t1 = threading.Thread(target=capture_screen_and_send, args=(client_socket,))
-t2 = threading.Thread(target=receive_commands, args=(client_socket,))
+# 定义显示屏幕图像的函数
+def display_screen():
+    while True:
+        # 接收屏幕图像的字节流
+        data = client_socket.recv(1024)
+        # 如果没有数据，说明连接已断开
+        if not data:
+            break
+        # 将字节流解码为图像
+        frame = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
+        # 显示图像
+        cv2.imshow('Remote Desktop', frame)
+        # 按'q'退出
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
-t1.start()
-t2.start()
+# 开始显示屏幕图像的循环
+display_screen()
 
-t1.join()
-t2.join()
-
+# 关闭连接
 client_socket.close()
+cv2.destroyAllWindows()
