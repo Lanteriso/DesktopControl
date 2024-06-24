@@ -1,4 +1,18 @@
 import socket
+from PIL import ImageGrab  # 需要安装Pillow库
+from io import BytesIO
+import pydirectinput
+def send_screenshot(conn):
+    # 截取屏幕
+    screenshot = ImageGrab.grab()
+    # 将图片转换为字节流
+    buffer = BytesIO()
+    screenshot.save(buffer, format='PNG')
+    img_str = buffer.getvalue()
+
+    # 发送图片数据
+    conn.sendall(len(img_str).to_bytes(4, 'big'))  # 发送图片大小
+    conn.sendall(img_str)
 
 class EchoServer:
     def __init__(self, host='192.168.0.105', port=12345):
@@ -41,6 +55,10 @@ class EchoServer:
                     if not data:
                         break
                     print(f"{addr}:{data.decode()}")
+                    if data.decode() == '截图':
+                        send_screenshot(client_socket)
+                    else:
+                        pydirectinput.press(data.decode())
         except KeyboardInterrupt:
             print("服务器关闭。")
         finally:

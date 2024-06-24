@@ -15,12 +15,48 @@ class EchoClient:
     def send(self, message):
         self.client_socket.sendall(message.encode('utf-8'))
 
+    def 截图啊(self):
+        from PIL import Image
+        from io import BytesIO
+        # 发送截图命令
+        cmd = '截图'.encode('utf-8')
+        # s.sendall(len(cmd).to_bytes(4, 'big'))
+        self.send(cmd)
+
+        # 接收图片大小
+        size_bytes = self.client_socket.recv(4)
+        if len(size_bytes) != 4:
+            print("接收到的图片大小信息不完整")
+            return
+
+        size = int.from_bytes(size_bytes, 'big')
+        img_data = b''
+
+        # 确保接收到完整的图片数据
+        while len(img_data) < size:
+            part = self.client_socket.recv(size - len(img_data))
+            if not part:
+                print("图片数据接收不完整.")
+                break
+            img_data += part
+
+        if len(img_data) == size:
+            # 使用Pillow库将字节流转换为图片
+            try:
+                image = Image.open(BytesIO(img_data))
+                # 显示图片
+                image.show()
+            except IOError as e:
+                print(f"无法显示图片: {e}")
+        else:
+            print("接收到的图片数据不完整")
+
     def on_key_event(self,event):
         print(event.name)
         self.send(event.name)
         if event.event_type == 'down' and event.name == 'a':
             print('Alt+A 组合键被按下了。')
-            self.send('截图')
+            self.截图啊()
         elif event.name == 'esc':
             self.close()
     def receive(self):
@@ -28,6 +64,8 @@ class EchoClient:
 
     def close(self):
         self.client_socket.close()
+
+
 
     def __del__(self):
         print("客户端对象销毁。")
