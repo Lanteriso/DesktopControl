@@ -11,7 +11,7 @@ def receive_and_display_image(server_ip):
         # 接收图像数据
         data = b''
         while len(data) < 4000000:  # 假设JPEG图像数据不会超过4MB
-            packet = client_socket.recv(4096)
+            packet = client_socket.recv(1080)
             if not packet:
                 break
             data += packet
@@ -28,7 +28,7 @@ def receive_and_display_image(server_ip):
                 break
         else:
             print("无法解码图像数据。")
-        time.sleep(1)
+
 
     # 清理
     client_socket.close()

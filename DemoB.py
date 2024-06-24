@@ -9,7 +9,7 @@ def capture_and_send_screen(client_socket):
         screen = ImageGrab.grab(bbox=(0, 0, 1920, 1080))
         _, buffer = cv2.imencode('.jpg', screen, [int(cv2.IMWRITE_JPEG_QUALITY), 10])
         client_socket.send(buffer.tobytes())
-        time.sleep(1)
+
 def main():
     # 创建socket对象并绑定到端口
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
