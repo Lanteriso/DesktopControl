@@ -23,7 +23,7 @@ def start_client(host='192.168.0.105', port=12345):
         while len(img_data) < size:
             part = s.recv(size - len(img_data))
             if not part:
-                print("图片数据接收不完整")
+                print("图片数据接收不完整.")
                 break
             img_data += part
 
