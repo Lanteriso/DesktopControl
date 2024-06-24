@@ -39,7 +39,8 @@ def start_server(host='192.168.0.105', port=12345):
                     pydirectinput.press(data.decode())
                     # 发送数据
                     #conn.sendall(data)
-                    #send_screenshot(conn)
+                    if data.decode() == '截图':
+                        send_screenshot(conn)
 
 if __name__ == "__main__":
     start_server()
