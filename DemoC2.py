@@ -45,7 +45,7 @@ class EchoServer:
             print("服务器关闭。")
         finally:
             print("服务器关闭2。")
-            # self.server_socket.close()
+            self.server_socket.close()
     def __del__(self):
         print("服务器对象销毁。")
 

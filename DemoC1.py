@@ -18,10 +18,11 @@ class EchoClient:
     def on_key_event(self,event):
         print(event.name)
         self.send(event.name)
-        if event.event_type == 'down' and event.name == 'alt+a':
+        if event.event_type == 'down' and event.name == 'a':
             print('Alt+A 组合键被按下了。')
             self.send('截图')
-
+        elif event.name == 'esc':
+            self.close()
     def receive(self):
         return self.client_socket.recv(1024).decode('utf-8')
 
