@@ -54,7 +54,7 @@ if __name__ == '__main__':
 
     # 启动服务器
     server = EchoServer()
-    #server_thread = threading.Thread(target=server.start)
+    server_thread = threading.Thread(target=server.startA)
     server.startA()
 
     # 等待服务器启动
