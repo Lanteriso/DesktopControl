@@ -74,6 +74,6 @@ if __name__ == '__main__':
     server = EchoServer()
     server_thread = threading.Thread(target=server.startA)
     server_thread.start()
-
+    server_thread.join()
     # 等待服务器启动
     #input("按 Enter 启动客户端...")
