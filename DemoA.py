@@ -1,6 +1,7 @@
 import socket
 import cv2
 import numpy as np
+import time
 def receive_and_display_image(server_ip):
     # 创建socket对象并连接到服务端
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -27,6 +28,7 @@ def receive_and_display_image(server_ip):
                 break
         else:
             print("无法解码图像数据。")
+        time.sleep(1)
 
     # 清理
     client_socket.close()
