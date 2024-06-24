@@ -13,7 +13,7 @@ server_socket.bind((server_ip, server_port))
 
 # 开始监听连接
 server_socket.listen(1)
-print("等待客户端连接...")
+print("等待客户端连接1...")
 
 # 接受客户端连接
 client_socket, addr = server_socket.accept()
