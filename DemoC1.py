@@ -31,6 +31,6 @@ if __name__ == '__main__':
     client = EchoClient()
     client.connect()
     client.send("你好，服务器！")
-    print("收到服务器的回声：", client.receive())
-    client.close()
+    #print("收到服务器的回声：", client.receive())
+    #client.close()
 
